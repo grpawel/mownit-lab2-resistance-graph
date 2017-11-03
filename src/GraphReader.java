@@ -1,3 +1,5 @@
+import java.io.File;
+import java.io.FileNotFoundException;
 import java.util.Scanner;
 
 /**
@@ -5,15 +7,14 @@ import java.util.Scanner;
  */
 
 public class GraphReader {
-    private final String filePath;
+    private final Scanner scanner;
 
-    public GraphReader(final String filePath) {
-        this.filePath = filePath;
+    public GraphReader(final String filePath) throws FileNotFoundException {
+        this.scanner = new Scanner(new File(filePath));
     }
 
     public Graph readFromFile() {
         final Graph graph = new Graph();
-        final Scanner scanner = new Scanner(filePath);
         while (scanner.hasNextLine()) {
             final String line = scanner.nextLine();
             final String[] splitLine = line.split(" ");
