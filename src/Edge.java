@@ -21,5 +21,13 @@ public class Edge {
     public double getValue() {
         return value;
     }
+
+    @Override
+    public String toString() {
+        return "Edge{" +
+                "type=" + type +
+                ", value=" + value +
+                '}';
+    }
 }
 
