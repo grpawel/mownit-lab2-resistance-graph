@@ -1,3 +1,5 @@
+package pl.edu.agh.mownit.lab2;
+
 import org.jgrapht.graph.SimpleWeightedGraph;
 
 /**

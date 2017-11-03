@@ -1,3 +1,5 @@
+package pl.edu.agh.mownit.lab2;
+
 /**
  * Created by Paweł Grochola on 03.11.2017.
  */
