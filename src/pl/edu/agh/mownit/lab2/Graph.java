@@ -39,7 +39,7 @@ public class Graph extends SimpleWeightedGraph<String, Edge> {
                         .filter(e -> e.containsVertices(vertex1, vertex2))
                         .findFirst()
                         .orElseThrow(() -> new AssertionError("Cycle has edge that does not exist"));
-                final EdgeDirection direction = edge.getFirstVertex().equals(vertex1) ? EdgeDirection.NORMAL : EdgeDirection.REVERSED;
+                final EdgeDirection direction = edge.getSmallerVertex().equals(vertex1) ? EdgeDirection.NORMAL : EdgeDirection.REVERSED;
                 edgeCycle.add(new Pair<>(edge, direction));
             }
             edgeCycles.add(edgeCycle);

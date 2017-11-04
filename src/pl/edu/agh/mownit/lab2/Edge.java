@@ -59,7 +59,8 @@ public class Edge {
     @Override
     public String toString() {
         return "Edge{" +
-                "type=" + type +
+                "vertices=(" + firstVertex + "," + secondVertex + ")" +
+                ", type=" + type +
                 ", value=" + value +
                 ", index=" + index +
                 '}';

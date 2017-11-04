@@ -27,7 +27,7 @@ public class LinearEquationSystem {
 
     public void solve() {
         Matrix lhs = new Matrix(coefficients);
-        Matrix rhs = new Matrix(freeTerms, 3);
+        Matrix rhs = new Matrix(freeTerms, size);
         double[][] ans = lhs.solve(rhs).getArray();
         for (int i = 0; i < size; i++) {
             result[i] = ans[i][0];
