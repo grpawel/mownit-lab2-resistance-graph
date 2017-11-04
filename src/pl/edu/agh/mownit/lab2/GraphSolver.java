@@ -51,7 +51,7 @@ public class GraphSolver {
                 .boxed()
                 .collect(Collectors.toSet());
         final Set<Integer> unusedCycles = IntStream.range(0, edgeCycles.size()).boxed().collect(Collectors.toSet());
-        while (!unusedEdges.isEmpty()) {
+        while (!unusedEdges.isEmpty() || currentEquation < equations.getSize()) {
             final List<Long> cycleScores = scoreCycles(edgeCycles, unusedEdges);
             final Integer indexOfCurrentCycle = findUnusedCycleWithMaximumScore(unusedCycles, cycleScores);
             unusedCycles.remove(indexOfCurrentCycle);
