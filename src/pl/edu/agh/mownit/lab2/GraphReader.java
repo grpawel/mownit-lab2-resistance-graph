@@ -17,6 +17,7 @@ public class GraphReader {
 
     public Graph readFromFile() {
         final Graph graph = new Graph();
+        int currentIndex = 0;
         while (scanner.hasNextLine()) {
             final String line = scanner.nextLine();
             final String[] splitLine = line.split(" ");
@@ -24,10 +25,11 @@ public class GraphReader {
             final String secondVertex = splitLine[1];
             final double value = Double.parseDouble(splitLine[2]);
             final Edge.Type type = scanner.hasNextLine() ? Edge.Type.RESISTANCE : Edge.Type.EMF;
-            final Edge edge = new Edge(type, value);
+            final Edge edge = new Edge(firstVertex, secondVertex, type, value, currentIndex);
             graph.addVertex(firstVertex);
             graph.addVertex(secondVertex);
             graph.addEdge(firstVertex, secondVertex, edge);
+            currentIndex++;
         }
         return graph;
     }
