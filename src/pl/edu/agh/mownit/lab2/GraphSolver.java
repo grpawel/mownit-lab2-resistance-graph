@@ -1,7 +1,5 @@
 package pl.edu.agh.mownit.lab2;
 
-import javafx.util.Pair;
-
 import java.util.Comparator;
 import java.util.List;
 import java.util.Set;
@@ -48,7 +46,7 @@ public class GraphSolver {
     }
 
     private void applySecondKirchoffsLaw() {
-        final List<List<Pair<Edge, Graph.EdgeDirection>>> edgeCycles = graph.findEdgeCycles();
+        final List<List<Edge>> edgeCycles = graph.findEdgeCycles();
         final Set<Integer> unusedEdges = IntStream.range(0, graph.edgeSet().size())
                 .boxed()
                 .collect(Collectors.toSet());
@@ -57,23 +55,17 @@ public class GraphSolver {
             final List<Long> cycleScores = scoreCycles(edgeCycles, unusedEdges);
             final Integer indexOfCurrentCycle = findUnusedCycleWithMaximumScore(unusedCycles, cycleScores);
             unusedCycles.remove(indexOfCurrentCycle);
-            final List<Pair<Edge, Graph.EdgeDirection>> currentCycle = edgeCycles.get(indexOfCurrentCycle);
+            final List<Edge> currentCycle = edgeCycles.get(indexOfCurrentCycle);
             final double[][] coefficients = equations.getCoefficients();
             final double[] freeTerms = equations.getFreeTerms();
-            for (final Pair<Edge, Graph.EdgeDirection> edgePair : currentCycle) {
-                unusedEdges.remove(edgePair.getKey().getIndex());
-                switch (edgePair.getKey().getType()) {
+            for (final Edge edge : currentCycle) {
+                unusedEdges.remove(edge.getIndex());
+                switch (edge.getType()) {
                     case RESISTANCE:
-                        coefficients[currentEquation][edgePair.getKey().getIndex()] = edgePair.getKey().getValue();
-                        if (edgePair.getValue() == Graph.EdgeDirection.REVERSED) {
-                            coefficients[currentEquation][edgePair.getKey().getIndex()] *= -1;
-                        }
+                        coefficients[currentEquation][edge.getIndex()] = edge.getValue();
                         break;
                     case EMF:
-                        double emf = edgePair.getKey().getValue();
-                        if(edgePair.getValue() == Graph.EdgeDirection.REVERSED) {
-                            emf *= -1;
-                        }
+                        double emf = edge.getValue();
                         freeTerms[currentEquation] += emf;
                         break;
                 }
@@ -82,10 +74,10 @@ public class GraphSolver {
         }
     }
 
-    private List<Long> scoreCycles(final List<List<Pair<Edge, Graph.EdgeDirection>>> cycles, final Set<Integer> unusedEdges) {
+    private List<Long> scoreCycles(final List<List<Edge>> cycles, final Set<Integer> unusedEdges) {
         return cycles.stream()
                 .map(cycle -> cycle.stream()
-                        .filter(edgePair -> unusedEdges.contains(edgePair.getKey().getIndex()))
+                        .filter(edgePair -> unusedEdges.contains(edgePair.getIndex()))
                         .count())
                 .collect(Collectors.toList());
     }

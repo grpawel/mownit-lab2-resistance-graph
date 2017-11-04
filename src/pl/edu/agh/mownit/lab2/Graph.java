@@ -1,6 +1,5 @@
 package pl.edu.agh.mownit.lab2;
 
-import javafx.util.Pair;
 import org.jgrapht.alg.cycle.PatonCycleBase;
 import org.jgrapht.graph.SimpleWeightedGraph;
 
@@ -22,25 +21,23 @@ public class Graph extends SimpleWeightedGraph<String, Edge> {
         return patonCycleBase.findCycleBase();
     }
 
-    public enum EdgeDirection {
-        NORMAL,
-        REVERSED
-    }
-    public List<List<Pair<Edge, EdgeDirection>>> findEdgeCycles() {
+    public List<List<Edge>> findEdgeCycles() {
         final Set<Edge> edges = edgeSet();
         final List<List<String>> vertexCycles = findVertexCycles();
-        final List<List<Pair<Edge, EdgeDirection>>> edgeCycles = new ArrayList<>();
+        final List<List<Edge>> edgeCycles = new ArrayList<>();
         for (final List<String> vertexCycle : vertexCycles) {
-            final List<Pair<Edge, EdgeDirection>> edgeCycle = new ArrayList<>();
+            final List<Edge> edgeCycle = new ArrayList<>();
             for (int i = 0; i < vertexCycle.size(); i++) {
                 final String vertex1 = vertexCycle.get(i);
                 final String vertex2 = vertexCycle.get((i + 1) % vertexCycle.size());
-                final Edge edge = edges.stream()
+                Edge edge = edges.stream()
                         .filter(e -> e.containsVertices(vertex1, vertex2))
                         .findFirst()
                         .orElseThrow(() -> new AssertionError("Cycle has edge that does not exist"));
-                final EdgeDirection direction = edge.getSmallerVertex().equals(vertex1) ? EdgeDirection.NORMAL : EdgeDirection.REVERSED;
-                edgeCycle.add(new Pair<>(edge, direction));
+                if(edge.getFirstVertex().equals(vertex2) && edge.getSecondVertex().equals(vertex1)) {
+                    edge = edge.reversedOrder();
+                }
+                edgeCycle.add(edge);
             }
             edgeCycles.add(edgeCycle);
         }

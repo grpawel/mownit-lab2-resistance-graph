@@ -56,6 +56,10 @@ public class Edge {
         }
     }
 
+    public Edge reversedOrder() {
+        return new Edge(secondVertex, firstVertex, type, -value, index);
+    }
+
     @Override
     public String toString() {
         return "Edge{" +
