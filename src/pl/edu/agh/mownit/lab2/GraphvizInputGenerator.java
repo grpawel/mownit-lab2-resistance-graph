@@ -1,8 +1,6 @@
 package pl.edu.agh.mownit.lab2;
 
-import java.util.ArrayList;
 import java.util.Arrays;
-import java.util.Comparator;
 import java.util.List;
 import java.util.stream.Collectors;
 import java.util.stream.Stream;
@@ -10,9 +8,7 @@ import java.util.stream.Stream;
 /**
  * Created by Paweł Grochola on 04.11.2017.
  */
-public class GraphvizInputGenerator {
-    private final Graph graph;
-    private final double[] edgeValues;
+public class GraphvizInputGenerator extends GraphFileGenerator {
     private final List<Edge> edges;
     private final double minValue;
     private final double valueSpan;
@@ -21,14 +17,14 @@ public class GraphvizInputGenerator {
     private final double lineWidthSpan = maxLineWidth - minLineWidth;
 
     public GraphvizInputGenerator(final Graph graph, final double[] edgeValues) {
-        this.graph = graph;
-        this.edgeValues = edgeValues;
+        super(graph, edgeValues);
         this.edges = reverseReversedEdges();
         final double maxValue = Arrays.stream(edgeValues).map(Math::abs).max().orElseThrow(() -> new AssertionError("Result is empty"));
         this.minValue = Arrays.stream(edgeValues).map(Math::abs).min().orElseThrow(() -> new AssertionError("Result is empty"));
         this.valueSpan = maxValue - minValue;
     }
 
+    @Override
     public String generate() {
         final Stream<String> verticesStream = edges.stream()
                 .map(edge -> edge.getFirstVertex() + " -> " + edge.getSecondVertex());
@@ -61,17 +57,5 @@ public class GraphvizInputGenerator {
         return (value - minValue) * lineWidthSpan / valueSpan + minLineWidth;
     }
 
-    private List<Edge> reverseReversedEdges() {
-        final List<Edge> edgesList = new ArrayList<>(graph.edgeSet());
-        edgesList.sort(Comparator.comparingInt(Edge::getIndex));
-        for (int i = 0; i < edgesList.size(); i++) {
-            if(edgeValues[i] < 0) {
-                edgeValues[i] *= -1;
-                final Edge oldEdge = edgesList.get(i);
-                final Edge newEdge = new Edge(oldEdge.getSecondVertex(), oldEdge.getFirstVertex(), oldEdge.getType(), oldEdge.getValue(), oldEdge.getIndex());
-                edgesList.set(i, newEdge);
-            }
-        }
-        return edgesList;
-    }
+
 }
