@@ -18,16 +18,17 @@ public class Main {
         final LinearEquationSystem equations = new LinearEquationSystem(graph.edgeSet().size());
         new GraphSolver(equations, graph).applyKirchoffLaws();
         equations.solve();
-        final String graphString = new GraphSaver(graph, equations.getResult()).save();
-        generateGraphvizOutput(graphString, args[0]);
+        generateGraphvizOutput(graph, equations.getResult(), args[0]);
+        generateTextOutput(graph, equations.getResult(), args[0]);
     }
 
-    private static void generateGraphvizOutput(final String graphString, final String fileName) throws IOException, InterruptedException {
+    private static void generateGraphvizOutput(final Graph graph, final double[] edgeValues, final String fileName) throws IOException, InterruptedException {
+        final String graphString = new GraphvizInputGenerator(graph, edgeValues).generate();
         final File tempFile = File.createTempFile(java.util.UUID.randomUUID().toString(), ".dot");
         Files.write(Paths.get(tempFile.getAbsolutePath()), graphString.getBytes());
         final String fileNameWithoutExtension = new File(fileName).getAbsolutePath().replaceFirst("[.][^.]+$", "");
         final Process process = new ProcessBuilder(
-                "neato",
+                "C:\\Program Files (x86)\\Graphviz2.38\\bin\\neato.exe",
                 tempFile.getAbsolutePath(),
                 "-Tpng",
                 "-o" + fileNameWithoutExtension + ".png").start();
@@ -39,5 +40,11 @@ public class Main {
         while ((line = br.readLine()) != null) {
             System.out.println(line);
         }
+    }
+
+    private static void generateTextOutput(final Graph graph, final double[] edgeValues, final String fileName) throws IOException {
+        final String fileNameWithoutExtension = new File(fileName).getAbsolutePath().replaceFirst("[.][^.]+$", "");
+        final String graphString = new TextOutputGenerator(graph, edgeValues).generate();
+        Files.write(Paths.get(fileNameWithoutExtension + ".graph"), graphString.getBytes());
     }
 }

@@ -10,7 +10,7 @@ import java.util.stream.Stream;
 /**
  * Created by Paweł Grochola on 04.11.2017.
  */
-public class GraphSaver {
+public class GraphvizInputGenerator {
     private final Graph graph;
     private final double[] edgeValues;
     private final List<Edge> edges;
@@ -20,7 +20,7 @@ public class GraphSaver {
     private final double maxLineWidth = 5.0;
     private final double lineWidthSpan = maxLineWidth - minLineWidth;
 
-    public GraphSaver(final Graph graph, final double[] edgeValues) {
+    public GraphvizInputGenerator(final Graph graph, final double[] edgeValues) {
         this.graph = graph;
         this.edgeValues = edgeValues;
         this.edges = reverseReversedEdges();
@@ -29,7 +29,7 @@ public class GraphSaver {
         this.valueSpan = maxValue - minValue;
     }
 
-    public String save() {
+    public String generate() {
         final Stream<String> verticesStream = edges.stream()
                 .map(edge -> edge.getFirstVertex() + " -> " + edge.getSecondVertex());
         final Stream<String> lineWidthStream = edges.stream()
