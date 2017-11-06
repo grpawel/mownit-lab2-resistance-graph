@@ -14,18 +14,17 @@ public class GraphSaver {
     private final Graph graph;
     private final double[] edgeValues;
     private final List<Edge> edges;
-    private final double maxValue;
     private final double minValue;
     private final double valueSpan;
-    final double minLineWidth = 0.5;
-    final double maxLineWidth = 5.0;
-    final double lineWidthSpan = maxLineWidth - minLineWidth;
+    private final double minLineWidth = 0.5;
+    private final double maxLineWidth = 5.0;
+    private final double lineWidthSpan = maxLineWidth - minLineWidth;
 
     public GraphSaver(final Graph graph, final double[] edgeValues) {
         this.graph = graph;
         this.edgeValues = edgeValues;
         this.edges = reverseReversedEdges();
-        this.maxValue = Arrays.stream(edgeValues).map(Math::abs).max().orElseThrow(() -> new AssertionError("Result is empty"));
+        final double maxValue = Arrays.stream(edgeValues).map(Math::abs).max().orElseThrow(() -> new AssertionError("Result is empty"));
         this.minValue = Arrays.stream(edgeValues).map(Math::abs).min().orElseThrow(() -> new AssertionError("Result is empty"));
         this.valueSpan = maxValue - minValue;
     }
@@ -47,7 +46,14 @@ public class GraphSaver {
 
         final Stream<String> resultStream = Utils.zip(verticesStream, annotationsStream, (s, s2) -> s + "\t" + s2);
 
-        return resultStream.collect(Collectors.joining(System.lineSeparator()));
+        final String graphDefinition = "digraph{" +
+                "  node [" +
+                "    shape = circle," +
+                "    size = 1];" +
+                "  esep = 10;" +
+                resultStream.collect(Collectors.joining(System.lineSeparator())) +
+                "}";
+        return graphDefinition;
     }
 
     private double getLineWidth(final int index) {
