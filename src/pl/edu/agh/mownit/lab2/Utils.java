@@ -10,6 +10,7 @@ import java.util.stream.StreamSupport;
 
 /**
  * Created by Paweł Grochola on 04.11.2017.
+ * https://stackoverflow.com/a/23529010
  */
 public class Utils {
     public static<A, B, C> Stream<C> zip(Stream<? extends A> a,
